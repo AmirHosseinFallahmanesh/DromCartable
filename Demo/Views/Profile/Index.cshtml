@@ -1,0 +1,106 @@
+﻿@model User
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+    <div class="container">
+        <div class="jumbotron">
+            <h3>سلام @Model.Name @Model.Surname</h3>
+            <hr />
+            <h3>شماره دانشجویی: @Model.Username</h3>
+            <h3>کد ملی: @Model.Password</h3>
+        </div>
+        <ul class="nav nav-tabs">
+
+            <li><a data-toggle="tab" href="#menu1">نتایج درخواست ها</a></li>
+            <li><a data-toggle="tab" href="#menu2">درخواست جدید</a></li>
+            <li><a data-toggle="tab" href="#menu3">اطلاعات اتاق</a></li>
+
+        </ul>
+
+        <div class="tab-content">
+            <div id="menu1" class="tab-pane fade">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>تاریخ</th>
+                            <th>شرح درخواست</th>
+                            <th>وضعیت</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Bookings)
+                        {
+
+                            PersianCalendar pc = new PersianCalendar();
+                            string date = pc.GetYear(item.DateTime) + "-" +
+                                pc.GetMonth(item.DateTime) + "-" + pc.GetDayOfMonth(item.DateTime);
+
+                            string state = "";
+                            switch (item.ReserveState)
+                            {
+                                case ReserveState.Wait:
+                                    state = "در حال بررسی ";
+                                    break;
+                                case ReserveState.Accept:
+                                    state = "تایید شد ";
+                                    break;
+                                case ReserveState.Deny:
+                                    state = "رد شد ";
+                                    break;
+
+                            }
+                            <tr class="info">
+                                <td>@date</td>
+                                <td>@item.Description</td>
+                                <td>@state</td>
+                            </tr>
+
+                        }
+
+
+
+                    </tbody>
+                </table>
+
+
+
+
+            </div>
+            <div id="menu2" class="tab-pane fade">
+                <h3>درخواست جدید</h3>
+                <form method="post" action="~/Profile/Reserve">
+
+                    <div class="form-group">
+                        <label for="description">توضیحات:</label>
+                        <textarea class="form-control" rows="5" id="description" name="description"> </textarea>
+                        <input type="submit" value="درخواست رزرو اتاق" class="btn btn-info" />
+                    </div>
+
+                </form>
+            </div>
+            <div id="menu3" class="tab-pane fade">
+                @{
+
+                    if (ViewBag.room != null)
+                    {
+                        Room room = ViewBag.room as Room;
+                        <h3>شماره اتاق: @room.Number</h3>
+                    }   else
+                {
+                    <p>اتاقی برای شما هنوز ثبت نشده است</p>
+                }
+
+
+
+                }
+               
+             
+
+
+
+
+            </div>
+    </div>
+    </div>

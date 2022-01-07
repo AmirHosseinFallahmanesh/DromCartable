@@ -1,0 +1,54 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+@model List<Booking>
+
+@{ 
+    int counter=1;
+}
+
+<div class="container">
+    <h2>مدیریت درخواست ها</h2>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ردیف</th>
+                <th>تاریخ</th>
+                <th>شماره دانشجویی</th>
+                <th>نام</th>
+                <th>نام خانوادگی</th>
+                <th>توضیحات</th>
+                <th>عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                 PersianCalendar pc = new PersianCalendar();
+                            string date = pc.GetYear(item.DateTime) + "-" +
+                                pc.GetMonth(item.DateTime) + "-" + pc.GetDayOfMonth(item.DateTime);
+
+            <tr class="info">
+                <td>@counter</td>
+                <td>@date</td>
+                <td>@item.User.Username</td>
+                <td>@item.User.Name</td>
+                <td>@item.User.Surname</td>
+                <td>@item.Description</td>
+                <td>
+                    <a href="~/admin/accept/@item.BookingId" class="btn btn-info btn-sm">
+                        <span class="glyphicon glyphicon-ok"></span> تایید
+                    </a>
+                    <a href="~/admin/deny/@item.BookingId" class="btn btn-danger btn-sm">
+                        <span class="glyphicon glyphicon-remove"></span> رد
+                    </a>
+                </td>
+            </tr>
+                counter++;
+            }
+
+        </tbody>
+    </table>
+</div>
